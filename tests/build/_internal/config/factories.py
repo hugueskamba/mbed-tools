@@ -6,6 +6,7 @@ import factory
 
 from mbed_tools.build._internal.config.config import Config, Option, Macro
 from mbed_tools.build._internal.config.source import Source
+from mbed_tools.project.mbed_program import MbedProgram
 
 
 class SourceFactory(factory.Factory):
@@ -44,3 +45,8 @@ class ConfigFactory(factory.Factory):
 
     options = factory.Dict({})
     macros = factory.Dict({})
+
+
+class MbedProgramFactory(factory.Factory):
+    class Meta:
+        model = MbedProgram

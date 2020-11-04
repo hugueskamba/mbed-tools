@@ -4,7 +4,7 @@
 #
 from unittest import TestCase
 
-from tests.build._internal.config.factories import ConfigFactory
+from tests.build._internal.config.factories import ConfigFactory, MbedProgramFactory
 from mbed_tools.build._internal.cmake_file import generate_mbed_config_cmake_file, _render_mbed_config_cmake_template
 
 
@@ -26,11 +26,12 @@ class TestGenerateCMakeListsFile(TestCase):
         toolchain_name = "GCC"
         target["supported_c_libs"] = {toolchain_name.lower(): ["small", "std"]}
         target["supported_application_profiles"] = ["full", "bare-metal"]
+        mbed_program = MbedProgramFactory()
 
-        result = generate_mbed_config_cmake_file(mbed_target, target, config, toolchain_name)
+        result = generate_mbed_config_cmake_file(mbed_target, target, config, toolchain_name, mbed_program)
 
         self.assertEqual(
-            result, _render_mbed_config_cmake_template(target, config, toolchain_name, mbed_target,),
+            result, _render_mbed_config_cmake_template(target, config, toolchain_name, mbed_target, mbed_program),
         )
 
 
@@ -51,7 +52,8 @@ class TestRendersCMakeListsFile(TestCase):
         toolchain_name = "baz"
         target["supported_c_libs"] = {toolchain_name.lower(): ["small", "std"]}
         target["supported_application_profiles"] = ["full", "bare-metal"]
-        result = _render_mbed_config_cmake_template(target, config, toolchain_name, "target_name")
+        mbed_program = MbedProgramFactory()
+        result = _render_mbed_config_cmake_template(target, config, toolchain_name, "target_name", mbed_program)
 
         for label in target["labels"] + target["extra_labels"]:
             self.assertIn(label, result)
